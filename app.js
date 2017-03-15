@@ -7,8 +7,9 @@ var cookieParser = require('cookie-parser');
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var session = require('express-session');
 
-mongoose.connect('mongodb://localhost/thebigmarket');
+mongoose.connect('mongodb://localhost:27017/thebigmarket');
 
 //routers
 var indexRouter = require('./routes/index');
@@ -28,6 +29,11 @@ app.set('view engine', 'ejs');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 //middlewares
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true
+}))
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

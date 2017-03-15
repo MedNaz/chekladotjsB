@@ -7,7 +7,7 @@ var route = express.Router();
 
 //testing
 var userAccount = require('../models/userAccountModele');
-var signInController = require('../Features/Authentification/signIn/controler');
+var signInController = require('../Features/Authentification/signUp/controler');
 
 
 route.get('/', function(req,res){

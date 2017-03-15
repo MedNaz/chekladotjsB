@@ -3,6 +3,8 @@
  */
 
 var mongoose = require('mongoose');
+var bcrypt = require('bcrypt');
+
 
 //require all necessary models to sign in
 var account = require('../../../models/userAccountModele');
@@ -36,8 +38,8 @@ function handleSignUp(queryRes, errorMessages,res,req,user){
     //testing if there was no errors
     if(errorMessages.length === 0){
 
-        saveUser(account,user);
-        res.send('passed the form');
+        hashPassword(user.accountPassword,user,res);
+
     }else{
         console.log(errorMessages);
         res.render('signup',{errors : errorMessages});
@@ -73,6 +75,27 @@ function verifyAllKeysAreSet(obj,arr) {
     return objProperties.toString() === arr.toString();
 
 }
+
+//Hash the password hashPassword(user.accountPassword,user,res);
+
+function hashPassword(password,user,res){
+    var salt = 10;
+    bcrypt.hash(password,salt,function (err,hash) {
+        if(err){
+            throw err;
+        }else{
+            console.log('this is the password '+ password);
+            user.accountPassword = hash;
+            console.log('this is the hash '+ user.accountPassword);
+            saveUser(account,user);
+
+        }
+        res.redirect('/signin');
+
+    });
+}
+
+
 
 
 //return an object from a body request provied by the body parser middleware

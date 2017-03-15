@@ -1,15 +1,15 @@
-var mongoose =require('mongoose');
-var Schema =mongoose.Schema;
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-var sellerModel= require('./sellerModel')
+var sellerModel = require('./sellerModel')
 
 var AnnoucementSchema = new Schema({
-    announceSellerId :{type: Schema.Types.ObjectId, ref : 'sellerModel'},
-    announceText : {type :String},
-    announceViewsNumber : Number,
-    createdOn : {type :Date, default:Date.now()}
+    announceSellerId: {type: Schema.Types.ObjectId, ref: 'sellerModel'},
+    announceText: {type: String},
+    announceViewsNumber: Number,
+    createdOn: {type: Date, default: Date.now()}
 
 });
-var annoucementModel=mongoose.model('Announcement',AnnoucementSchema);
+var annoucementModel = mongoose.model('Announcement', AnnoucementSchema);
 
-module.exports= annoucementModel;
+module.exports = annoucementModel;

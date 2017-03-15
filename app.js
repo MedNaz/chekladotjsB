@@ -6,7 +6,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var app = express();
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
+mongoose.connect('mongodb://localhost/thebigmarket');
 
 //routers
 var indexRouter = require('./routes/index');

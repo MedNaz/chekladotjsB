@@ -26,15 +26,17 @@ function verifyEmail(obj){
 
 function handleSignIn(queryRes, errorMessages,res,req,user){
 
-    console.log(errorMessages)
+
     //testing if there was no errors
-    if(errorMessages.length === 0){
+
+    if(!(errorMessages.email) && !(errorMessages.password)){
 
         authenticate(user.accountPassword,user,res,req,errorMessages);
 
     }else{
-        console.log(errorMessages);
-        res.render('signin',{errors : errorMessages});
+
+
+        res.render('signin',{errors : errorMessages, accountDoesNotExist: 0});
     }
 }
 function verifyPassword(obj){
@@ -42,12 +44,13 @@ function verifyPassword(obj){
 }
 
 function verifyUserBeforeSave(obj,req){
-    var errorMessages = [];
+    var errorMessages = {};
     if(!verifyEmail(obj)){
-        errorMessages.push({"email": "email is not submitted"});
+        errorMessages.email = "Veuillez entrer votre email";
+
     }
     if(!verifyPassword(obj)){
-        errorMessages.push({"password": "password is not submitted"});
+        errorMessages.password = "Veuillez entrer votre mot de passe";
     }
     return errorMessages;
 }
@@ -66,16 +69,26 @@ function authenticate(password,user,res,req,errorMessages) {
                     if (err) {
                         throw err;
                     } else if (result) {
+
                         req.session._userID = data._id;
+                        var hour = 3600000;
+                        req.session.cookie.maxAge = hour;
+
 
                         res.send("authentified " + req.session._userID);
 
                     } else {
-                        res.send("no user with these credentials");
+                        var notIdentifiedAccount = {
+                            "message" : "Veuillez vérifier votre email et votre mot de passe."
+                        }
+                        res.render('signin',{errors: errorMessages, accountDoesNotExist: notIdentifiedAccount})
                     }
                 });
             }else{
-                res.send("no user with these credentials");
+                var notIdentifiedAccount = {
+                    "message" : "Veuillez vérifier votre email et votre mot de passe."
+                }
+                res.render('signin',{errors: errorMessages, accountDoesNotExist: notIdentifiedAccount});
             }
         });
 }

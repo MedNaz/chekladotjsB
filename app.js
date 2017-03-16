@@ -31,6 +31,7 @@ app.set('view engine', 'ejs');
 //middlewares
 app.use(session({
     secret: 'keyboard cat',
+    name: 'SessionID',
     resave: false,
     saveUninitialized: true
 }))
@@ -39,7 +40,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/public',express.static(__dirname + "/public"));
-
+app.use(function(req, res, next){
+    res.removeHeader('X-Powered-By');
+    next();
+});
 
 //routers middlewares
 app.use('/', indexRouter);

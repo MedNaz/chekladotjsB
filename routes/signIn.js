@@ -11,7 +11,7 @@ var signInController = require('../Features/Authentification/signIn/controller')
 
 route.get('/', function(req, res){
 
-    res.render('signin');
+    res.render('signin',{errors: 0, accountDoesNotExist: 0});
 });
 
 route.post('/', function (req, res) {

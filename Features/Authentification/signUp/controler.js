@@ -33,10 +33,11 @@ function emailExists(email,errorMessages,res,req,user) {
 
 function handleSignUp(queryRes, errorMessages,res,req,user){
     if(queryRes.length > 0){
-        errorMessages.push({"emailExist":"email already exists"});
+        errorMessages.emailExist = "email already exists";
     }
     //testing if there was no errors
-    if(errorMessages.length === 0){
+    if(!(errorMessages.email) && !(errorMessages.password) && !(errorMessages.emailExist) &&
+        !(errorMessages.passwordsMismatch)  ){
 
         hashPassword(user.accountPassword,user,res);
 
@@ -48,15 +49,15 @@ function handleSignUp(queryRes, errorMessages,res,req,user){
 
 
 function verifyUserBeforeSave(obj,req){
-    var errorMessages = [];
+    var errorMessages = {};
     if(!verifyEmail(obj)){
-        errorMessages.push({"email": "email is not submitted"});
+        errorMessages.email = "email is not submitted";
     }
     if(!verifyPassword(obj)){
-        errorMessages.push({"password": "password is not submitted"});
+        errorMessages.password = "password is not submitted";
     }
     if(obj.accountPassword !== req.body.passwordConfirmation){
-        errorMessages.push({"passwordsMismatch":"passwords must match"});
+        errorMessages.passwordsMismatch = "passwords must match";
     }
     return errorMessages;
 }

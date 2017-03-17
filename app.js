@@ -8,6 +8,13 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var session = require('express-session');
+var passport = require('passport');
+var passport_facebook = require("./Features/Authentification/Social networks/Facebook/facebookStrategy");
+
+
+
+
+
 
 mongoose.connect('mongodb://localhost:27017/thebigmarket');
 
@@ -19,6 +26,9 @@ var signUpRouter = require('./routes/signUp');
 var messagingRouter = require('./routes/messaging');
 var shopRouter = require('./routes/shop');
 var searchRouter = require('./routes/search');
+var FacebookRouter = require('./routes/facebookAuth');
+
+var facebookRouter = require('./routes/facebookAuth');
 
 
 // view engine setup
@@ -34,16 +44,33 @@ app.use(session({
     name: 'SessionID',
     resave: false,
     saveUninitialized: true
-}))
+}));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/public',express.static(__dirname + "/public"));
-app.use(function(req, res, next){
-    res.removeHeader('X-Powered-By');
-    next();
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+passport.serializeUser(function(userID, done) {
+
+    done(null, userID);
 });
+
+passport.deserializeUser(function(id, done) {
+    // User.findById(id, function(err, user) {
+    //     done(err, user);
+    // });
+    // console.log(id);
+    done(null,id)
+});
+
+
+passport.use(passport_facebook());
 
 //routers middlewares
 app.use('/', indexRouter);
@@ -53,6 +80,7 @@ app.use('/signup', signUpRouter);
 app.use('/messaging', messagingRouter);
 app.use('/shop', shopRouter);
 app.use('/search',searchRouter);
+app.use('/auth/facebook',facebookRouter);
 
 
 // catch 404 and forward to error handler

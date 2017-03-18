@@ -14,7 +14,26 @@ router.get('/:username',function(req, res){
             throw err;
 
         }else if(!account){
-            res.send("profile not found")
+            profileController.getAccountIdFromUsernameFacebook(req.params.username,function(err, account){
+                if(err){
+                    throw err;
+                }else{
+                    if(!account){
+                        res.send("profile not found");
+                    }else{
+                        profileController.getProfileFromAccountID(account._id,function(err,profile){
+                            if(err){
+                                throw err;
+                            }else{
+                                console.log(profile);
+                                res.send("profile found")
+                            }
+                            ;
+                        });
+                    }
+                }
+            })
+
         }else{
 
             profileController.getProfileFromAccountID(account._id,function(err,profile){

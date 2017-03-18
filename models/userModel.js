@@ -180,50 +180,24 @@ UserSchema.statics.insertToVisitedShop = function (userid, shopid) {
 
 //create user account once he signs up
 UserSchema.statics.createUserAccount = function (accountId,user) {
-    var user1;
-    if(!user){
-        user1=new userModel({
-            userAccountId:accountId
-        })
-        userModel.create(user1, function(err,user){
-            if(err){
-                throw err;
-            }else{
-                userProfileModel.create({},function(err, profile){
-                    if(err){
-                        throw err;
-                    }else{
-                        userModel.createUserProfile(user._id,profile._id);
-                    }
-                })
-            }
-
-        });
-    }else{
-        var facebookUser = user;
-        user1 = {
-            userAccountId : user.facebookId
-        }
-        userModel.create(user1, function(err,user){
-            if(err){
-                throw err;
-            }else{
-                var profile = {
-                    profileFirstName: facebookUser.accountUsername
+    var user1=new userModel({
+        userAccountId:accountId
+    })
+    userModel.create(user1, function(err,user){
+        if(err){
+            throw err;
+        }else{
+            console.log("just created a user", + user);
+            userProfileModel.create({},function(err, profile){
+                if(err){
+                    throw err;
+                }else{
+                    userModel.createUserProfile(user._id,profile._id);
                 }
-                userProfileModel.create(profile,function(err, profile){
-                    if(err){
-                        throw err;
-                    }else{
-                        userModel.createUserProfile(user._id,profile._id);
-                    }
-                })
-            }
+            })
+        }
 
-        });
-
-    }
-
+    });
 };
 
 

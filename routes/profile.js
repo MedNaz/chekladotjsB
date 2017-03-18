@@ -5,9 +5,26 @@ var express = require('express');
 
 
 var router = express.Router();
+var profileController = require('../Features/Profile/profile');
 
-router.get('/',function(req, res){
-    res.render('profile');
+router.get('/:username',function(req, res){
+    console.log(req.params.username);
+    profileController.getAccountIdFromUsername(req.params.username, function(err, account){
+        if(err){
+            throw err;
+
+        }else if(!account){
+            res.send("profile not found")
+        }else{
+
+            profileController.getProfileFromAccountID(account._id,function(err,profile){
+                res.send("profile found");
+            });
+
+        }
+
+    });
+
 
 
 

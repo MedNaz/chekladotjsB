@@ -14,8 +14,6 @@ var passport_facebook = require("./Features/Authentification/Social networks/Fac
 
 
 
-
-
 mongoose.connect('mongodb://localhost:27017/thebigmarket');
 
 //routers

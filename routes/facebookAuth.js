@@ -7,6 +7,7 @@ var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
 
 
+var userModel = require('../models/userModel');
 
 /* GET home page. */
 router.get('/',
@@ -16,7 +17,7 @@ router.get('/callback',
     passport.authenticate('facebook', { failureRedirect: '/fail' }),
     function(req, res) {
         // Successful authentication, redirect home.
-        ;
+
         res.send("You're just connected with facebook");
     });
 

@@ -16,6 +16,8 @@ var FACEBOOK_APP_ID = "1438992112797703";
 var FACEBOOK_APP_SECRET = "3e38aebd2afe11d0d92af7188a8306e1";
 
 
+var userModel = require('../../../../models/userModel');
+
 
 
 function facebookStrategy(){
@@ -38,7 +40,7 @@ function facebookStrategy(){
                 }else if(!result){
 
                     facebookModel.create(user, function (err, user) {
-
+                        userModel.createUserAccount(user._id);
                         return cb(err, user.facebookId);
                     });
 

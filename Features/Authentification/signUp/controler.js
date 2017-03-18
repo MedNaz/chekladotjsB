@@ -4,8 +4,8 @@
 
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
-
-
+var userModel = require('../../../models/userModel');
+var userProfileModel = require('../../../models/userProfileModel');
 //require all necessary models to sign in
 var account = require('../../../models/userAccountModele');
 
@@ -134,7 +134,7 @@ function saveUser(model,user){
         if(err){
             throw err;
         }else{
-            console.log('user saved ' + user.toString());
+            userModel.createUserAccount(user._id);
         }
     });
 

@@ -1,10 +1,10 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var sellerModel = require('./sellerModel')
+var sellerModel = require('./sellerModel');
 
 var AnnoucementSchema = new Schema({
-    announceId:Schema.Types.ObjectId,
+    announceId: Schema.Types.ObjectId,
     announceSellerId: {type: Schema.Types.ObjectId, ref: 'seller'},
     announceText: {type: String},
     announceViewsNumber: Number,

@@ -22,22 +22,32 @@ function verifyEmail(obj){
 
 //return all documents
 function emailExists(email,errorMessages,res,req,user) {
-    var res = res;
-    console.log(req.body.email);
+
    account.find({accountEmail:email},function(err,result){
-        handleSignUp(result,errorMessages,res,req,user);
+       if(result.length > 0){
+           errorMessages.emailExist = "email already exists";
+       }
+       userNameExists(errorMessages,res,req,user);
    });
 
 }
 
+function userNameExists(errorMessages,res,req,user){
+    account.find({accountUsername:user.accountUsername},function(err,result){
+        console.log(result )
+        if(result.length > 0){
+            errorMessages.username = "username already exists";
+        }
+        handleSignUp(errorMessages,res,req,user);
+    });
+}
+function handleSignUp(errorMessages,res,req,user){
 
-function handleSignUp(queryRes, errorMessages,res,req,user){
-    if(queryRes.length > 0){
-        errorMessages.emailExist = "email already exists";
-    }
+
+
     //testing if there was no errors
     if(!(errorMessages.email) && !(errorMessages.password) && !(errorMessages.emailExist) &&
-        !(errorMessages.passwordsMismatch)  ){
+        !(errorMessages.passwordsMismatch) && !(errorMessages.username) ){
 
         hashPassword(user.accountPassword,user,res);
 
@@ -50,6 +60,9 @@ function handleSignUp(queryRes, errorMessages,res,req,user){
 
 function verifyUserBeforeSave(obj,req){
     var errorMessages = {};
+    if(!verifyUsername(obj)){
+        errorMessages.username = "username is not submitted";
+    }
     if(!verifyEmail(obj)){
         errorMessages.email = "email is not submitted";
     }
@@ -62,9 +75,13 @@ function verifyUserBeforeSave(obj,req){
     return errorMessages;
 }
 
-//check if email is set
+
 function verifyPassword(obj){
     return (verifyIfKeyIsSet(obj,"accountPassword") && obj.accountPassword !== '');
+}
+
+function verifyUsername(obj){
+    return (verifyIfKeyIsSet(obj,"accountUsername") && obj.accountUsername !== '');
 }
 
 //verify if all fields
@@ -103,7 +120,8 @@ function hashPassword(password,user,res){
 function constructUser(body){
     return {
         accountEmail: body.email,
-        accountPassword: body.password
+        accountPassword: body.password,
+        accountUsername: body.username
     }
 }
 

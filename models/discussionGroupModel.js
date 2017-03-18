@@ -4,13 +4,13 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var userModel = require('./userModel')
+var userModel = require('./userModel');
 var DiscussionGroupSchema = new Schema({
     usersId: [{type: Schema.Types.ObjectId, ref: userModel}],
     createdOn: {type: Date, default: Date.now()}
 
 });
 
-var discussionGroupModel = mongoose.model('DiscussionGroup', DiscussionGroupSchema);
+var discussionGroupModel = mongoose.model('discussiongroup', DiscussionGroupSchema);
 
 module.exports = discussionGroupModel;

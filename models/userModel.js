@@ -180,6 +180,7 @@ UserSchema.statics.insertToVisitedShop = function (userid, shopid) {
 
 //create user account once he signs up
 UserSchema.statics.createUserAccount = function (accountId,user) {
+    var fbuser = user;
     var user1=new userModel({
         userAccountId:accountId
     })
@@ -187,8 +188,16 @@ UserSchema.statics.createUserAccount = function (accountId,user) {
         if(err){
             throw err;
         }else{
-            console.log("just created a user", + user);
-            userProfileModel.create({},function(err, profile){
+
+            var Profile = {
+
+            };
+            if(fbuser){
+                Profile.profileFirstName = fbuser.displayName
+
+            }
+            console.log("this is the profile " + Profile.profileFirstName);
+            userProfileModel.create(Profile ,function(err, profile){
                 if(err){
                     throw err;
                 }else{

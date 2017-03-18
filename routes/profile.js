@@ -26,7 +26,7 @@ router.get('/:username',function(req, res){
                                 throw err;
                             }else{
                                 console.log(profile);
-                                res.send("profile found")
+                                res.send("profile found");
                             }
                             ;
                         });

@@ -8,7 +8,7 @@ var userModel = require('../../../models/userModel');
 var userProfileModel = require('../../../models/userProfileModel');
 //require all necessary models to sign in
 var account = require('../../../models/userAccountModele');
-
+var accountFacebook = require('../Social networks/Facebook/facebookModel')
 
 //check if a key is defined in an object
 function verifyIfKeyIsSet(obj,key){
@@ -24,6 +24,7 @@ function verifyEmail(obj){
 function emailExists(email,errorMessages,res,req,user) {
 
    account.find({accountEmail:email},function(err,result){
+       if(err) throw err;
        if(result.length > 0){
            errorMessages.emailExist = "email already exists";
        }
@@ -34,11 +35,21 @@ function emailExists(email,errorMessages,res,req,user) {
 
 function userNameExists(errorMessages,res,req,user){
     account.find({accountUsername:user.accountUsername},function(err,result){
-        console.log(result )
+        if(err) throw err;
         if(result.length > 0){
             errorMessages.username = "username already exists";
+        }else {
+            accountFacebook.find({ accountUsername:user.accountUsername },function(err, result){
+                if(err) throw err;
+                if(result.length > 0){
+                    errorMessages.username = "username already exists";
+                    handleSignUp(errorMessages,res,req,user);
+                }else{
+                    handleSignUp(errorMessages,res,req,user);
+                }
+            })
         }
-        handleSignUp(errorMessages,res,req,user);
+
     });
 }
 function handleSignUp(errorMessages,res,req,user){
@@ -102,9 +113,9 @@ function hashPassword(password,user,res){
         if(err){
             throw err;
         }else{
-            console.log('this is the password '+ password);
+
             user.accountPassword = hash;
-            console.log('this is the hash '+ user.accountPassword);
+
             saveUser(account,user);
 
         }

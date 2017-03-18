@@ -41,7 +41,7 @@ function facebookStrategy(){
                 }else if(!result){
 
                     facebookModel.create(user, function (err, user) {
-                        userModel.createUserAccount(user._id);
+                        userModel.createUserAccount(user._id,profile);
                         return cb(err, user.facebookId);
                     });
 

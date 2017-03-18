@@ -26,6 +26,7 @@ var signUpRouter = require('./routes/signUp');
 var messagingRouter = require('./routes/messaging');
 var shopRouter = require('./routes/shop');
 var searchRouter = require('./routes/search');
+var profileRouter = require('./routes/profile');
 var FacebookRouter = require('./routes/facebookAuth');
 
 var facebookRouter = require('./routes/facebookAuth');
@@ -80,6 +81,7 @@ app.use('/signup', signUpRouter);
 app.use('/messaging', messagingRouter);
 app.use('/shop', shopRouter);
 app.use('/search',searchRouter);
+app.use('/profile', profileRouter);
 app.use('/auth/facebook',facebookRouter);
 
 

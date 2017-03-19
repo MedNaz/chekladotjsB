@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>The big market</title>
+    <title>The big market | <%= obj.username %></title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
@@ -24,9 +24,8 @@
                 <img src="../public/images/johndoe.jpg" alt="" class="img-responsive">
             </div><!-- img container -->
             <div class="col-md-6">
-                <h2 class="username">Hichem Med</h2>
-                <p class="interests">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet adipisci
-                    repudiandae</p>
+                <h2 class="username"><%= obj.username %></h2>
+                <p class="interests"><%= obj.profileDescription %></p>
             </div><!-- profile description -->
             <div class="col-md-4 text-right">
                 <div class="row">
@@ -52,31 +51,34 @@
                 <div class="info personal-info">
                     <h3>Personal information</h3>
                     <ul>
-                        <li>First name</li>
-                        <li>Last name</li>
-                        <li>Gender</li>
+                        <li><%= obj.profileFirstName %></li>
+                        <li><%= obj.profileLastName %></li>
+                        <li><%= obj.accountUserGender%></li>
                         <li>Address</li>
                     </ul>
                 </div><!-- info -->
                 <div class="info following-info">
                     <h3>Following</h3>
                     <div class="row shops-followed">
-                        <div class="col-sm-6">
-                            <img src="../public/images/store.jpg" alt="" class="img-responsive">
-                            <h6 class="shop-name text-center"><a href="">Shop name</a></h6>
-                        </div>
-                        <div class="col-sm-6">
-                            <img src="../public/images/store.jpg" alt="" class="img-responsive">
-                            <h6 class="shop-name text-center"><a href="">Shop name</a></h6>
-                        </div>
-                        <div class="col-sm-6">
-                            <img src="../public/images/store.jpg" alt="" class="img-responsive">
-                            <h6 class="shop-name text-center"><a href="">Shop name</a></h6>
-                        </div>
-                        <div class="col-sm-6">
-                            <img src="../public/images/store.jpg" alt="" class="img-responsive">
-                            <h6 class="shop-name text-center"><a href="">Shop name</a></h6>
-                        </div>
+                        <% obj.shopFollowed.forEach(function(shop){%>
+                            <div class="col-sm-6">
+                                    <img src="../public/images/store.jpg" alt="" class="img-responsive">
+                                    <h6 class="shop-name text-center"><a href=""><%= shop.shopName%></a></h6>
+                            </div>
+                        <%})%>
+
+                        <!--<div class="col-sm-6">-->
+                            <!--<img src="../public/images/store.jpg" alt="" class="img-responsive">-->
+                            <!--<h6 class="shop-name text-center"><a href="">Shop name</a></h6>-->
+                        <!--</div>-->
+                        <!--<div class="col-sm-6">-->
+                            <!--<img src="../public/images/store.jpg" alt="" class="img-responsive">-->
+                            <!--<h6 class="shop-name text-center"><a href="">Shop name</a></h6>-->
+                        <!--</div>-->
+                        <!--<div class="col-sm-6">-->
+                            <!--<img src="../public/images/store.jpg" alt="" class="img-responsive">-->
+                            <!--<h6 class="shop-name text-center"><a href="">Shop name</a></h6>-->
+                        <!--</div>-->
                     </div>
                 </div><!-- info -->
                 <div class="info groups">
@@ -105,6 +107,7 @@
                 <div class="shops-container">
                     <div class="col-md-12">
                         <div class="row shops-container">
+                            <% obj.shopsVisited.forEach(function(shop){%>
                             <div class="col-md-4 shop-wrapper">
                                 <div class="shop">
                                     <div class="row shop-img-container">
@@ -113,7 +116,7 @@
                                         </div>
                                     </div><!-- shop img container -->
                                     <div class="row text-center shop-detail">
-                                        <h4>Shop name</h4>
+                                        <h4><%= shop.shopName%></h4>
                                         <h5>Category</h5>
                                         <div class="row product-rating  text-center">
                                             <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
@@ -135,93 +138,94 @@
                                         </div><!-- product rating -->
                                         <div class="shop-call-to-action">
                                             <div class="">
-                                                <button class="btn btn-primary">
+                                                <a class="btn btn-primary" href="http://localhost:8080/shop/<%= shop._id%>">
                                                     Visit now
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                     </div><!-- shop information -->
                                 </div>
 
                             </div><!-- shop wrapper -->
-                            <div class="col-md-4 shop-wrapper">
-                                <div class="shop">
-                                    <div class="row shop-img-container">
-                                        <div class="col-xs-12">
-                                            <img src="../public/images/store.jpg" alt="" class="img-responsive">
-                                        </div>
-                                    </div><!-- shop img container -->
-                                    <div class="row text-center shop-detail">
-                                        <h4>Shop name</h4>
-                                        <h5>Category</h5>
-                                        <div class="row product-rating  text-center">
-                                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                                <i class="material-icons">star_rate</i>
-                                            </div>
-                                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                                <i class="material-icons">star_rate</i>
-                                            </div>
-                                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                                <i class="material-icons">star_rate</i>
-                                            </div>
-                                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                                <i class="material-icons">star_rate</i>
-                                            </div>
-                                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                                <i class="material-icons">star_rate</i>
-                                            </div>
+                            <%})%>
+                            <!--<div class="col-md-4 shop-wrapper">-->
+                                <!--<div class="shop">-->
+                                    <!--<div class="row shop-img-container">-->
+                                        <!--<div class="col-xs-12">-->
+                                            <!--<img src="../public/images/store.jpg" alt="" class="img-responsive">-->
+                                        <!--</div>-->
+                                    <!--</div>&lt;!&ndash; shop img container &ndash;&gt;-->
+                                    <!--<div class="row text-center shop-detail">-->
+                                        <!--<h4>Shop name</h4>-->
+                                        <!--<h5>Category</h5>-->
+                                        <!--<div class="row product-rating  text-center">-->
+                                            <!--<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">-->
+                                                <!--<i class="material-icons">star_rate</i>-->
+                                            <!--</div>-->
+                                            <!--<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">-->
+                                                <!--<i class="material-icons">star_rate</i>-->
+                                            <!--</div>-->
+                                            <!--<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">-->
+                                                <!--<i class="material-icons">star_rate</i>-->
+                                            <!--</div>-->
+                                            <!--<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">-->
+                                                <!--<i class="material-icons">star_rate</i>-->
+                                            <!--</div>-->
+                                            <!--<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">-->
+                                                <!--<i class="material-icons">star_rate</i>-->
+                                            <!--</div>-->
 
-                                        </div><!-- product rating -->
-                                        <div class="shop-call-to-action">
-                                            <div class="">
-                                                <button class="btn btn-primary">
-                                                    Visit now
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div><!-- shop information -->
-                                </div>
+                                        <!--</div>&lt;!&ndash; product rating &ndash;&gt;-->
+                                        <!--<div class="shop-call-to-action">-->
+                                            <!--<div class="">-->
+                                                <!--<button class="btn btn-primary">-->
+                                                    <!--Visit now-->
+                                                <!--</button>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>&lt;!&ndash; shop information &ndash;&gt;-->
+                                <!--</div>-->
 
-                            </div><!-- shop wrapper -->
-                            <div class="col-md-4 shop-wrapper">
-                                <div class="shop">
-                                    <div class="row shop-img-container">
-                                        <div class="col-xs-12">
-                                            <img src="../public/images/store.jpg" alt="" class="img-responsive">
-                                        </div>
-                                    </div><!-- shop img container -->
-                                    <div class="row text-center shop-detail">
-                                        <h4>Shop name</h4>
-                                        <h5>Category</h5>
-                                        <div class="row product-rating  text-center">
-                                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                                <i class="material-icons">star_rate</i>
-                                            </div>
-                                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                                <i class="material-icons">star_rate</i>
-                                            </div>
-                                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                                <i class="material-icons">star_rate</i>
-                                            </div>
-                                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                                <i class="material-icons">star_rate</i>
-                                            </div>
-                                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                                <i class="material-icons">star_rate</i>
-                                            </div>
+                            <!--</div>&lt;!&ndash; shop wrapper &ndash;&gt;-->
+                            <!--<div class="col-md-4 shop-wrapper">-->
+                                <!--<div class="shop">-->
+                                    <!--<div class="row shop-img-container">-->
+                                        <!--<div class="col-xs-12">-->
+                                            <!--<img src="../public/images/store.jpg" alt="" class="img-responsive">-->
+                                        <!--</div>-->
+                                    <!--</div>&lt;!&ndash; shop img container &ndash;&gt;-->
+                                    <!--<div class="row text-center shop-detail">-->
+                                        <!--<h4>Shop name</h4>-->
+                                        <!--<h5>Category</h5>-->
+                                        <!--<div class="row product-rating  text-center">-->
+                                            <!--<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">-->
+                                                <!--<i class="material-icons">star_rate</i>-->
+                                            <!--</div>-->
+                                            <!--<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">-->
+                                                <!--<i class="material-icons">star_rate</i>-->
+                                            <!--</div>-->
+                                            <!--<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">-->
+                                                <!--<i class="material-icons">star_rate</i>-->
+                                            <!--</div>-->
+                                            <!--<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">-->
+                                                <!--<i class="material-icons">star_rate</i>-->
+                                            <!--</div>-->
+                                            <!--<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">-->
+                                                <!--<i class="material-icons">star_rate</i>-->
+                                            <!--</div>-->
 
-                                        </div><!-- product rating -->
-                                        <div class="shop-call-to-action">
-                                            <div class="">
-                                                <button class="btn btn-primary">
-                                                    Visit now
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div><!-- shop information -->
-                                </div>
+                                        <!--</div>&lt;!&ndash; product rating &ndash;&gt;-->
+                                        <!--<div class="shop-call-to-action">-->
+                                            <!--<div class="">-->
+                                                <!--<button class="btn btn-primary">-->
+                                                    <!--Visit now-->
+                                                <!--</button>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>&lt;!&ndash; shop information &ndash;&gt;-->
+                                <!--</div>-->
 
-                            </div><!-- shop wrapper -->
+                            <!--</div>&lt;!&ndash; shop wrapper &ndash;&gt;-->
 
                         </div>
 
@@ -658,7 +662,11 @@
     </div><!-- second wrapper -->
 
 </div><!-- main wrapper -->
+<script>
 
+
+
+</script>
 
 <script
         src="https://code.jquery.com/jquery-3.1.1.min.js"

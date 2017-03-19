@@ -70,7 +70,10 @@ passport.deserializeUser(function(id, done) {
 
 
 passport.use(passport_facebook());
-
+app.use(function(req, res, next){
+    res.removeHeader("X-Powered-By");
+    next();
+})
 //routers middlewares
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

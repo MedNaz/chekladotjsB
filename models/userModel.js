@@ -36,9 +36,9 @@ UserSchema.statics.getProfileFromAccountId = function (accountId, callback) {
         if(err){
             throw err;
         }else if(!user){
-            console.log("there's no user with this accountID:" + accountId)
+            // console.log("there's no user with this accountID:" + accountId)
         }else{
-            console.log("found user: "+ user + " with account id : "+ accountId);
+            // console.log("found user: "+ user + " with account id : "+ accountId);
             var profileId = user.userProfileId;
             userProfileModel.findOne({_id: profileId}, callback)
         }
@@ -64,34 +64,64 @@ UserSchema.statics.getProfileFromAccountId = function (accountId, callback) {
  })
  };*/
 
- UserSchema.statics.findVisitedShops=function(userid,callback){
-    userModel.findOne({_id:userid},callback).populate('userShopsVisitedId')
+//  UserSchema.statics.findVisitedShops=function(userid,callback){
+//     userModel.findOne({_id:userid},callback).populate('userShopsVisitedId')
+//
+// };
+
+
+UserSchema.statics.findFollowedShops=function(userid,callback){
+    userModel.findOne({_id:userid},function (err,user) {
+        if(err)
+            throw err;
+        var arrayOfShops=[];
+        user.userShopsFollowedId.forEach(function (e) {
+            arrayOfShops.push(e)
+        })
+        var temp=[]
+        temp[0]=arrayOfShops
+        temp.forEach(callback)
+    }).populate('userShopsFollowedId')
 
 };
 
 
-
 /* a hint how to use the callbacl */
-/*
-UserSchema.statics.findVisitedShops = function (userid) {
-    userModel.findOne({_id: userid}, function (err, user) {
-        if (err)
+UserSchema.statics.findVisitedShops=function(userid,callback){
+    userModel.findOne({_id:userid},function (err,user) {
+        if(err)
             throw err;
+        var arrayOfVisitedShops=[];
         user.userShopsVisitedId.forEach(function (e) {
-            var shopid = e.shopId;
-            shopModel.findOne({_id: shopid}, function (err, shop) {
-                if (err)
-                    throw err;
-                console.log(shop.shopName)
-            })
+            arrayOfVisitedShops.push(e)
+        });
+        var temp=[];
+        temp[0]=arrayOfVisitedShops;
+        temp.forEach(callback)
+    }).populate('userShopsVisitedId.shopId')
 
-        })
-    }).populate('userShopsVisitedId')
-};*/
+};
 
- UserSchema.statics.findVisitedProducts=function(userid,callback){
-    userModel.findOne({_id:userid},callback).populate('userProductVisitedId') 
-}
+UserSchema.statics.findVisitedProducts=function(userid,callback){
+    userModel.findOne({_id:userid},function (err,user) {
+        var arrayOfProducts=[];
+        if(err)
+            throw err;
+        if(!user){
+            res.send("No user Found");
+        }else{
+
+            user.userProductVisitedId.forEach(function (e) {
+                arrayOfProducts.push(e)
+            });
+            var temp=[]
+            temp[0]= arrayOfProducts;
+            temp.forEach(callback);
+        }
+
+    }).populate('userProductVisitedId.prodId');
+
+};
 
 
 /* hint how to use callback */

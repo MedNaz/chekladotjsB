@@ -32,6 +32,10 @@ ProductSchema.statics.findAllProduct=function(condition,callback){
 
 }
 
+ProductSchema.statics.getProductById=function(prodId,callback){
+    productModel.findOne({_id:prodId},callback)
+}
+
 /*
 ProductSchema.statics.updateCategoryOfProduct=function(phoneId){
     this.findOne({_id:phoneId}).populate('categoryId').exec(function (err,phone) {

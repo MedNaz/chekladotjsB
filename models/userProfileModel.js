@@ -19,7 +19,7 @@ var UserProfileSchema =new Schema({
     profilePhone : {type: String},
     //img: { data: Buffer, contentType: String },
     accountUserGender: {type: String},
-    ProfileDescription:String,
+    profileDescription:String,
     createdOn : {type :Date, default:Date.now()}
 });
 var userProfileModel=mongoose.model('profile',UserProfileSchema);

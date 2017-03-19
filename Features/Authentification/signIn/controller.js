@@ -58,7 +58,7 @@ function verifyUserBeforeSave(obj,req){
 
 
 
-
+//
 function authenticate(password,user,res,req,errorMessages) {
     account.findOne({accountEmail: user.accountEmail},
         function (err, data) {

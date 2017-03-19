@@ -25,6 +25,8 @@ var messagingRouter = require('./routes/messaging');
 var shopRouter = require('./routes/shop');
 var searchRouter = require('./routes/search');
 var profileRouter = require('./routes/profile');
+var APIShopsRouter = require('./API/routes/shops');
+var APIUsersRouter = require('./API/routes/users');
 var FacebookRouter = require('./routes/facebookAuth');
 
 var facebookRouter = require('./routes/facebookAuth');
@@ -84,7 +86,8 @@ app.use('/shop', shopRouter);
 app.use('/search',searchRouter);
 app.use('/profile', profileRouter);
 app.use('/auth/facebook',facebookRouter);
-
+app.use('/apiv1/shops', APIShopsRouter);
+app.use('/apiv1/users', APIUsersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

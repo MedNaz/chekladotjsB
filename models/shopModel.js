@@ -175,7 +175,26 @@ ShopSchema.statics.findSocialNetworkLinksOfShop=function(id,callback){
     });
 };
 
+ShopSchema.statics.getInformationOfShop=function(shopid,callback){
+    shopModel.findOne({_id:shopid},callback)
+};
 
+
+ShopSchema.statics.getProductsOfShopByCategory=function(shopid,categoryid,callback){
+    shopModel.findOne({_id:shopid},function (err,shop) {
+        var arrayByCategory=[];
+        shop.shopProductsId.forEach(function (e) {
+
+            if (e.categoryId==categoryid){
+                arrayByCategory.push(e)
+            }
+        });
+        var temp=[];
+        temp[0]=arrayByCategory;
+        temp.forEach(callback)
+
+    }).populate('shopProductsId')
+}
 var shopModel=mongoose.model('shop',ShopSchema);
 
 /*

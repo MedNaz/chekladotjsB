@@ -11,6 +11,7 @@ var signInController = require('../Features/Authentification/signUp/controler');
 
 
 route.get('/', function(req,res){
+
     res.render('signup',{errors: 0});
 });
 

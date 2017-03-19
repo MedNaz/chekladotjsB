@@ -6,6 +6,7 @@ var route = express.Router();
 
 
 route.get('/',function(req,res){
+
     res.render('messaging');
 });
 

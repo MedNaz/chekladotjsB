@@ -46,6 +46,11 @@ body{
     color: #fff;
 
 }
+.is-siggned-in .dropdown .category-dropdown{
+    position: relative;
+
+    right: 100px;
+}
 .navbar-form input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
   font-size: 12px;
 }

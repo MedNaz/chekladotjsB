@@ -75,7 +75,7 @@ function authenticate(password,user,res,req,errorMessages) {
                         req.session.cookie.maxAge = hour;
 
 
-                        res.send("authentified " + req.session._userID);
+                        res.redirect("/authenticated ");
 
                     } else {
                         var notIdentifiedAccount = {

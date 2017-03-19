@@ -72,6 +72,11 @@ body{
     background-color: #009688;
     border-bottom: 5px solid #00695C;
 }
+.is-siggned-in .dropdown .category-dropdown{
+    position: relative;
+
+    right: 100px;
+}
 .navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus {
     background-color:#00897B;
     color: #ffffff;

@@ -16,6 +16,7 @@ var shopsRecentlyVisited = {};
 
 
 var constructObject = function(username, req, response){
+    var session = req.session._userID;
     var obj = {};
     getAccountIdFromUsername(username, function(err, account){
         if(err){
@@ -64,7 +65,7 @@ var constructObject = function(username, req, response){
                                                     obj.shopFollowed.push(shop);
 
                                                 });
-                                                response.render('profile', {obj: obj});
+                                                response.render('profile', {obj: obj,session: session});
                                             })
 
                                         })
@@ -118,7 +119,7 @@ var constructObject = function(username, req, response){
                                         obj.shopFollowed.push(shop);
 
                                     });
-                                    response.render('profile', {obj: obj});
+                                    response.render('profile', {obj: obj, session:session});
                                 })
 
                             })

@@ -76,6 +76,11 @@ body{
     background-color:#00897B;
     color: #ffffff;
 }
+.is-siggned-in .dropdown .category-dropdown{
+    position: relative;
+
+    right: 100px;
+}
 @media (max-width: 782px){
     .navbar-main-menu{
         padding-left: 0px;

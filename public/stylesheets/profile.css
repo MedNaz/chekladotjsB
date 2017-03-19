@@ -25,7 +25,11 @@ body{
 
                     }
 }
+.is-siggned-in .dropdown .category-dropdown{
+    position: relative;
 
+    right: 100px;
+}
 .category-dropdown i{
     position: relative;
     top:10px;

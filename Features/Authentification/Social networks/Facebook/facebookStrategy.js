@@ -34,7 +34,7 @@ function facebookStrategy(){
                 accountEmail    : profile.emails[0].value
 
             };
-            console.log(profile);
+
             facebookModel.findOne({facebookId : user.facebookId},function(err, result){
                 if(err){
                     throw err;

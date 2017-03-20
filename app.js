@@ -14,7 +14,7 @@ var passport_facebook = require("./Features/Authentification/Social networks/Fac
 
 
 
-mongoose.connect('mongodb://localhost:27017/thebigmarket');
+mongoose.connect('mongodb://localhost:27017/test7');
 
 //routers
 var indexRouter = require('./routes/index');
@@ -25,6 +25,8 @@ var messagingRouter = require('./routes/messaging');
 var shopRouter = require('./routes/shop');
 var searchRouter = require('./routes/search');
 var profileRouter = require('./routes/profile');
+var categoryRouter = require('./routes/category');
+var benchmaRouter = require('./routes/benchmark')
 var APIShopsRouter = require('./API/routes/shops');
 var APIUsersRouter = require('./API/routes/users');
 var FacebookRouter = require('./routes/facebookAuth');
@@ -85,6 +87,8 @@ app.use('/messaging', messagingRouter);
 app.use('/shop', shopRouter);
 app.use('/search',searchRouter);
 app.use('/profile', profileRouter);
+app.use('/benchmark', benchmaRouter);
+app.use('/category', categoryRouter);
 app.use('/auth/facebook',facebookRouter);
 app.use('/apiv1/shops', APIShopsRouter);
 app.use('/apiv1/users', APIUsersRouter);

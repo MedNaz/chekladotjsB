@@ -15,57 +15,36 @@ var ProductSchema = new Schema({
     productBenchmark: {type: Schema.Types.ObjectId,ref :'benchmark'},
     productPrice: {type: Number},
     // img: { data: Buffer, contentType: String }, need array une main et les autres pour plus de detail
+    productShopLocationId: {type : Schema.Types.ObjectId, ref : 'location'},
     productTags: [String],
     productState: String,
     productDetail: {type: Schema.Types.ObjectId,ref :'detailproduct' },
     createdOn: {type: Date, default: Date.now()}
 });
 
-ProductSchema.statics.findAllProduct=function(condition,callback){
-    this.find(condition,function (err,prod) {
+ProductSchema.statics.getProductById=function(prodid,callback){//2params err,product object
+    productModel.findOne({_id:prodid},callback)
+}
+
+ProductSchema.statics.updateProduct=function (prodid,fields,callback) {//2params err,doc
+    productModel.update({_id:prodid},{$set:fields},callback)
+}
+
+/**related to search engine*/
+ProductSchema.statics.findAllProductsWithAnyCondition=function(condition,callback){
+    productModel.find(condition,function (err,prod) {
         if(err)
-            throw err
-        prod.forEach(callback)
+            throw err;
+        var arrayOfProduct=[]
+        arrayOfProduct.push(prod)
+        arrayOfProduct.forEach(callback)
 
 
     })
 
-}
-
-ProductSchema.statics.getProductById=function(prodId,callback){
-    productModel.findOne({_id:prodId},callback)
-}
-
-/*
-ProductSchema.statics.updateCategoryOfProduct=function(phoneId){
-    this.findOne({_id:phoneId}).populate('categoryId').exec(function (err,phone) {
-        category.findOne({_id:phone.categoryId._id},function (err,cat) {
-            // cat.productsId
-            if(err)
-                throw err
-            //cat.categoryAllProducts.push("58cac6c9c6559b40856d8852");
-            console.log(cat.categoryAllProducts  +'updated')
-        })
-    });
-
-}
-*/
+};
 
 
 var productModel = mongoose.model('product', ProductSchema);
-var prod1=new productModel({
-    productName:'galaxy s5',
-    categoryId:"58cac30fc281993f7a4bfec8"
-});
-
-var prod2=new productModel({
-    productName:'AsusNj550k',
-    categoryId:"58cac30fc281993f7a4bfec9"
-});
-
-/*
-prod1.save();
-prod2.save();
-*/
 
 module.exports = productModel;

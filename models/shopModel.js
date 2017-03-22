@@ -157,7 +157,7 @@ ShopSchema.statics.getAnnouncementsOfShop=function(id,callback){//1param array o
         var arrayOfAnnoucements = []
 
         if (announcement.shopAnnouncementsId.length == 0)
-                console.log('there is no announcement')
+                callback(err, null);
         else{
             announcement.shopAnnouncementsId.forEach(function (e) {
                 arrayOfAnnoucements.push(e)
@@ -250,7 +250,7 @@ ShopSchema.statics.addNewAnnouncementToShop=function(announceId,shopId,callback)
         }
         else
         {
-            console.log('already exists')
+            callback(err, null);
         }
 
 
@@ -261,7 +261,7 @@ ShopSchema.statics.addNewSocialNetworkToShop=function(socialid,shopId,callback){
     this.findOne({_id:shopId},function (err,shop) {
         if(err)
             throw err;
-
+        console.log(shop);
         if(shop.socialNetworkLink.indexOf(socialid)===-1) {
             shop.socialNetworkLink.push(socialid);
             shop.save(callback)

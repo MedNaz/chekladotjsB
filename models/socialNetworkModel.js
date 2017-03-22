@@ -18,4 +18,4 @@ SocialNetworkSchema.statics.updateSocialNetwork=function (socialid,fields,callba
     socialNetworkModel.update({_id:socialid},{$set:fields},callback)
 }
 
-var socialNetworkModel=new mongoose.models('socialnetwork',SocialNetworkSchema)
+var socialNetworkModel=mongoose.model('socialnetwork',SocialNetworkSchema)

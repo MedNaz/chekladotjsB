@@ -5,6 +5,62 @@ var express = require('express');
 var router  = express.Router();
 
 var APIUsersController = require('../controllers/users');
+var account = require('../../models/userAccountModele');
+var accountFacebook = require('../../Features/Authentification/Social networks/Facebook/facebookModel');
+var bcrypt = require('bcrypt');
+
+//does a user exist
+router.post('/userExist', function(req, res){
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    var email = req.body.email;
+    var password = req.body.password;
+    if(!(email && password)){
+        res.json({
+            err: true
+        })
+    }
+    account.findOne({accountEmail: email}, function(err, result){
+        if(err) throw err;
+        if(!result){
+
+            res.json({
+                userExist: false
+            })
+
+        }else{
+            bcrypt.compare(password, result.accountPassword, function(err, result){
+                res.json({
+                    userExist: result
+                });
+            })
+
+        }
+    })
+})
+//verify if email already exists => not done
+router.post('/emailExist', function (req, res) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    var email = req.body.email;
+    if(!email){
+        res.json({
+            EmailNotProvided: true
+        })
+    }else{
+
+        APIUsersController.emailExist(email, function(result){
+            if(!result){
+                res.json({
+                    emailExist: false
+                });
+            }else{
+                res.json({
+                    emailExist: true
+                })
+            }
+        })
+    }
+
+})
 //get all users with profile
 router.get('/', function(req, res){
     APIUsersController.getAllUsers(function(users){
@@ -151,6 +207,7 @@ router.put('/:id/account', function (req, res) {
         res.send(account);
     });
 });
+
 
 module.exports = router;
 

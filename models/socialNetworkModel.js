@@ -6,7 +6,7 @@ var Schema = mongoose.Schema;
 var profile = require('./userProfileModel')
 var userModel = require('./userModel')
 var shopModel = require('./shopModel')
-
+var validator=require('./validator');
 
 var SocialNetworkSchema=new Schema({
     socialNetworkName:String,
@@ -18,4 +18,6 @@ SocialNetworkSchema.statics.updateSocialNetwork=function (socialid,fields,callba
     socialNetworkModel.update({_id:socialid},{$set:fields},callback)
 }
 
-var socialNetworkModel=mongoose.model('socialnetwork',SocialNetworkSchema)
+var socialNetworkModel= mongoose.model('socialnetwork',SocialNetworkSchema);
+
+module.exports=socialNetworkModel;

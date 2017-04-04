@@ -80,7 +80,7 @@ function verifyUserBeforeSave(obj,req){
     if(!verifyPassword(obj)){
         errorMessages.password = "password is not submitted";
     }
-    if(obj.accountPassword !== req.body.passwordConfirmation){
+    if(obj.accountPassword !== obj.accountPasswordConf){
         errorMessages.passwordsMismatch = "passwords must match";
     }
     return errorMessages;
@@ -132,6 +132,7 @@ function constructUser(body){
     return {
         accountEmail: body.email,
         accountPassword: body.password,
+        accountPasswordConf: body.passwordConf,
         accountUsername: body.username
     }
 }

@@ -4,7 +4,7 @@
 var express = require('express');
 var userModel = require('../../models/userModel');
 var userAccountModel = require('../../models/userAccountModele');
-
+var userFacebookAccountModel = require('../../Features/Authentification/Social networks/Facebook/facebookModel');
 //tested
 function getAllUsers(callback){
     userModel.getUsersWithProfiles(callback);
@@ -84,6 +84,17 @@ function getAccountOfASpecificUser(userId, callback){
 function updateAccountOfASpecificUser(userId, field, callback){
     userModel.updateFieldsUserAccount(userId, field, callback);
 }
+function emailExist(email, callback){
+    userAccountModel.findOne({accountEmail: email}, function(err, res){
+        if(!res){
+            userFacebookAccountModel.findOne({accountEmail: email}, function(err, res){
+                callback(res);
+            })
+        }else{
+            callback(res);
+        }
+    })
+}
 
 
 module.exports = {
@@ -102,7 +113,8 @@ module.exports = {
     addAShopToShopsViewedOfASpecificUser: addAShopToShopsViewedOfASpecificUser,
     blockMySelf: blockMySelf,
     getAccountOfASpecificUser: getAccountOfASpecificUser,
-    updateAccountOfASpecificUser: updateAccountOfASpecificUser
+    updateAccountOfASpecificUser: updateAccountOfASpecificUser,
+    emailExist: emailExist
 }
 
 

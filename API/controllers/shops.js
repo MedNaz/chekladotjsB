@@ -4,6 +4,7 @@
 
 var express = require('express');
 var shopModel = require('../../models/shopModel');
+var userModel = require('../../models/userModel');
 var productModel = require('../../models/productModel');
 var announcementModel = require('../../models/announcementModel');
 var socialNetworkModel = require('../../models/socialNetworkModel');
@@ -45,8 +46,8 @@ function addCategoryToCategoriesOfASpecificShop(categoryId, shopId, callback){
     shopModel.addNewCategoryToShop(categoryId, shopId, callback);
 }
 
-function addAProductToProductsOfASpecificShop(prodId, shopId, callback){
-    shopModel.addProductInShop(prodId, shopId, callback);
+function addAProductToProductsOfASpecificShop( shopId,fields, callback){
+    productModel.addNewProductToShop( shopId,fields,  callback);
 }
 
 function addAFollowerToFollowersOfASpecificShop(userId, shopId, callback){
@@ -87,6 +88,9 @@ function deleteAShop(shopId, callback) {
 
 // function deleteAProductOfASpecificShop()
 
+function addShop(userId,fields, callback) {
+    userModel.createShop(userId,fields, callback);
+}
 
 
 
@@ -112,7 +116,8 @@ module.exports = {
     updateAProductOfASpecificShop: updateAProductOfASpecificShop,
     updateAnAnnouncementOfASpecificShop: updateAnAnnouncementOfASpecificShop,
     updateSocialLinksOfASpecificShop: updateSocialLinksOfASpecificShop,
-    deleteAShop: deleteAShop
+    deleteAShop: deleteAShop,
+    addShop:addShop
 }
 
 

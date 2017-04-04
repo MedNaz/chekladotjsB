@@ -29,6 +29,7 @@ var categoryRouter = require('./routes/category');
 var benchmaRouter = require('./routes/benchmark')
 var APIShopsRouter = require('./API/routes/shops');
 var APIUsersRouter = require('./API/routes/users');
+var APIProductsRouter = require('./API/routes/products');
 var FacebookRouter = require('./routes/facebookAuth');
 
 var facebookRouter = require('./routes/facebookAuth');
@@ -42,19 +43,19 @@ app.set('view engine', 'ejs');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 //middlewares
-app.use(session({
-    secret: 'keyboard cat',
-    name: 'SessionID',
-    resave: false,
-    saveUninitialized: true
-}));
+
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/public',express.static(__dirname + "/public"));
-
+app.use(session({
+    secret: 'blablablaaloa',
+    name: 'SessionID',
+    resave: false,
+    saveUninitialized: true
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -92,6 +93,7 @@ app.use('/category', categoryRouter);
 app.use('/auth/facebook',facebookRouter);
 app.use('/apiv1/shops', APIShopsRouter);
 app.use('/apiv1/users', APIUsersRouter);
+app.use('/apiv1/products', APIProductsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

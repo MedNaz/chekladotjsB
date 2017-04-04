@@ -13,7 +13,7 @@ var SellerSchema = new Schema({
     sellerShopId: {type:Schema.Types.ObjectId,ref :'shop' },
     createdOn: {type: Date, default: Date.now()}
 
-});
+});/*
 SellerSchema.statics.updateUserAndShopOfSeller=function(userId,shopId,sellerId){
     this.findOne({_id:sellerId},function (err,seller) {
         seller.sellerUserId=userId;
@@ -21,7 +21,7 @@ SellerSchema.statics.updateUserAndShopOfSeller=function(userId,shopId,sellerId){
         seller.save()
 
     })
-};
+};*/
 // to get the shop object of a specific seller
 SellerSchema.statics.findShopOfSeller=function(sellerId,callback){
     this.findOne({_id:sellerId},callback).populate('sellerShopId')

@@ -9,7 +9,7 @@ var DetailProductSchema = new Schema({
     productId: {type: Schema.Types.ObjectId, ref: 'product'},
     //all  caracteristics possibl
     quantityOfProduct:Number,
-    productDescription: String,
+
     createdOn: {type: Date, default: Date.now()}
 });
 var detailProductModel = mongoose.model('detailproduct', DetailProductSchema);

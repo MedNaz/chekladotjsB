@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-
+var validator=require('./validator');
 var sellerModel = require('./sellerModel')
 
 var AnnoucementSchema = new Schema({
@@ -21,9 +21,5 @@ AnnoucementSchema.statics.updateAnnouncement=function (announceid,fields,callbac
 
 var annoucementModel = mongoose.model('announcement', AnnoucementSchema);
 
-var a1=new annoucementModel({
-    announceText:"second annoucement ......35352"
-})
 
-//a1.save();
 module.exports = annoucementModel;

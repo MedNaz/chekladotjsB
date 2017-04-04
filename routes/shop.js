@@ -14,4 +14,12 @@ route.get('/',function(req,res){
 
 });
 
+route.get('/openshop', function(req, res){
+    res.render('openShop');
+})
+
+route.post('/openshop', function(req, res){
+    res.send('openShop');
+})
+
 module.exports = route;

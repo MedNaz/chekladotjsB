@@ -71,7 +71,8 @@ function authenticate(password,user,res,req,errorMessages) {
                     } else if (result) {
 
                         req.session._userID = data._id;
-                        var hour = 3600000;
+                        console.log("this is the session "+ req.session._userID);
+                        var hour = 3600000000000;
                         req.session.cookie.maxAge = hour;
 
 

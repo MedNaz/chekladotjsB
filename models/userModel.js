@@ -5,265 +5,413 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var validator = require('./validator');
 
-
-var userAccount =require('./userAccountModele');
+var userAccount = require('./userAccountModele');
+var sellerModel = require('./sellerModel');
 
 var userProfileModel = require('./userProfileModel');
 
 var productModel = require('./productModel');
-var shopModel=require('./shopModel')
+var shopModel = require('./shopModel')
+var groupeModel = require('./groupeModel')
 
 
 var UserSchema = new Schema({
 
     userProfileId: {type: Schema.Types.ObjectId, ref: 'profile'},
     userAccountId: {type: Schema.Types.ObjectId, ref: 'account'},
-    userProductVisitedId: [{prodId: {type:Schema.Types.ObjectId, ref:'product'},visitedOn:{type: Date, default: Date.now()}}],
-    userShopsFollowedId:[{type:Schema.Types.ObjectId , ref: 'shop'}],
-    userMemberOfGroupsId:[{type:Schema.Types.ObjectId , ref: 'groupe'}],
-    userShopsVisitedId:[{shopId: {type:Schema.Types.ObjectId, ref:'shop'},visitedOn:{type: Date, default: Date.now()}}],
-    userLocationId: {type : Schema.Types.ObjectId, ref : 'location'},
-    isBlocked:{type:Boolean,default:false},
+    userProductVisitedId: [{
+        prodId: {type: Schema.Types.ObjectId, ref: 'product'},
+        visitedOn: {type: Date, default: Date.now()}
+    }],
+    userShopsFollowedId: [{type: Schema.Types.ObjectId, ref: 'shop'}],
+    userMemberOfGroupsId: [{type: Schema.Types.ObjectId, ref: 'groupe'}],
+    userShopsVisitedId: [{
+        shopId: {type: Schema.Types.ObjectId, ref: 'shop'},
+        visitedOn: {type: Date, default: Date.now()}
+    }],
+    userLocationId: {type: Schema.Types.ObjectId, ref: 'location'},
+    isBlocked: {type: Boolean, default: false},
     createdOn: {type: Date, default: Date.now()}
 });
+UserSchema.statics.createShop = function (userid, fields, callback) {
+    if (validator.params3AreValid(arguments)) {
+        userModel.findOne({_id: userid}, function (err, user) {
 
-UserSchema.statics.getUsersWithProfiles=function (callback) {
-    var temp=[]
-    userModel.find({},{'userAccountId':1,'userProfileId':1},function (err,users) {
-        if(err)
-            throw err
-        //console.log(users)
+            if (!user) {
+                console.log('no user')
+                callback(err, null)
+            }
+            else {
 
-        temp[0]=users
-        temp.forEach(callback)
+                var shop = new shopModel(fields);
 
-    }).populate('userProfileId')
-};
+                shop.save()
 
-UserSchema.statics.getSpecificUser=function (userid,callback) {
-    var temp=[]
-    userModel.findOne({_id:userid},function (err,user) {
-        if(err)
-            throw err
-        temp[0]=user;
-        temp.forEach(callback)
-
-    })
-
-}
+                var shopid = shop._id;
+                var seller = new sellerModel({
+                    sellerUserId: userid,
+                    sellerShopId: shopid
+                })
+                seller.save()
+                shop.shopSellerId = seller._id;
+                shop.save(callback);
 
 
+            }
 
-UserSchema.statics.findViewedProducts=function(userid,callback){
-    userModel.findOne({_id:userid},function (err,user) {
-        if(err)
-            throw err;
-        var arrayOfProducts=[];
-        user.userProductVisitedId.forEach(function (e) {
-
-            arrayOfProducts.push(e)
         })
-        var temp=[]
-        temp[0]=arrayOfProducts
-
-        temp.forEach(callback)
-    }).populate('userProductVisitedId.prodId')
-
+    }
+    else {
+        callback(null, null)
+    }
 };
 
 
-UserSchema.statics.findFollowedShops=function(userid,callback){
-    userModel.findOne({_id:userid},function (err,user) {
-        if(err)
-            throw err;
-        var arrayOfShops=[];
-        user.userShopsFollowedId.forEach(function (e) {
-            arrayOfShops.push(e)
+UserSchema.statics.getUsersWithProfiles = function (callback) {
+    if (typeof callback === 'function') {
+        var temp = []
+        userModel.find({}, {'userAccountId': 1, 'userProfileId': 1}, function (err, users) {
+            if (err)
+                throw err
+            if (!users) {
+                callback(null)
+            }
+            else {
+
+                temp[0] = users
+                temp.forEach(callback)
+            }
+        }).populate('userProfileId')
+    }
+    else {
+        callback(null)
+    }
+};
+
+UserSchema.statics.getSpecificUser = function (userid, callback) {
+    if (validator.params2AreValid(arguments)) {
+        var temp = []
+        userModel.findOne({_id: userid}, function (err, user) {
+            if (err)
+                throw err
+            if (!user) {
+                callback(null)
+            }
+            else {
+                temp[0] = user;
+                temp.forEach(callback)
+            }
+
         })
-        var temp=[]
-        temp[0]=arrayOfShops
-        temp.forEach(callback)
-    }).populate('userShopsFollowedId')
+    }
+    else {
+        callback(null)
+    }
+}
+
+
+UserSchema.statics.findViewedProducts = function (userid, callback) {
+    if (validator.params2AreValid(arguments)) {
+        var arrayOfProducts = [];
+        userModel.findOne({_id: userid}, function (err, user) {
+            if (err)
+                throw err;
+            if (!user) {
+                callback(null)
+            } else {
+
+                user.userProductVisitedId.forEach(function (e) {
+
+                    arrayOfProducts.push(e)
+                })
+                var temp = []
+                temp[0] = arrayOfProducts
+
+                temp.forEach(callback)
+            }
+        }).populate('userProductVisitedId.prodId')
+    }
+    else {
+        callback(null)
+    }
+};
+
+
+UserSchema.statics.findFollowedShops = function (userid, callback) {
+    if (validator.params2AreValid(arguments)) {
+        userModel.findOne({_id: userid}, function (err, user) {
+            if (err)
+                throw err;
+            if (!user) {
+                callback(null)
+            } else {
+                var arrayOfShops = [];
+                user.userShopsFollowedId.forEach(function (e) {
+                    arrayOfShops.push(e)
+                })
+                var temp = []
+                temp[0] = arrayOfShops
+                temp.forEach(callback)
+            }
+        }).populate('userShopsFollowedId')
+    }
+    else {
+        callback(null)
+    }
 
 };
 
 
-UserSchema.statics.findGroupsOfUser=function(userid,callback){
-    userModel.findOne({_id:userid},function (err,user) {
-        if(err)
-            throw err;
-        var arrayOfGroyps=[];
-        user.userMemberOfGroupsId.forEach(function (e) {
-            arrayOfGroyps.push(e)
+UserSchema.statics.findGroupsOfUser = function (userid, callback) {
+    if (validator.params2AreValid(arguments)) {
+        userModel.findOne({_id: userid}, function (err, user) {
+            if (err)
+                throw err;
+            if (!user) {
+                callback(null)
+            } else {
+                var arrayOfGroyps = [];
+                user.userMemberOfGroupsId.forEach(function (e) {
+                    arrayOfGroyps.push(e)
+                })
+                var temp = []
+                temp[0] = arrayOfGroyps
+                temp.forEach(callback)
+            }
+        }).populate('userMemberOfGroupsId')
+    }
+    else {
+        callback(null)
+    }
+};
+
+
+UserSchema.statics.findViewedShops = function (userid, callback) {
+    if (validator.params2AreValid(arguments)) {
+        userModel.findOne({_id: userid}, function (err, user) {
+            if (err)
+                throw err;
+            if (!user) {
+                callback(null)
+            } else {
+                var arrayOfVisitedShops = [];
+                user.userShopsVisitedId.forEach(function (e) {
+                    arrayOfVisitedShops.push(e)
+                });
+                var temp = [];
+                temp[0] = arrayOfVisitedShops;
+                temp.forEach(callback)
+            }
+        }).populate('userShopsVisitedId.shopId')
+    }
+    else {
+        callback(null)
+    }
+
+};
+
+
+UserSchema.statics.getProfileOfUser = function (userid, callback) {
+    if (validator.params2AreValid(arguments)) {
+        userModel.findOne({_id: userid}, function (err, user) {
+            if (err)
+                throw err;
+            if (!user) {
+                callback(null, null)
+            } else {
+                var prof = user.userProfileId;
+                userProfileModel.findOne({_id: prof}, callback)
+            }
+
+        }).populate('userProfileId')
+    } else {
+        callback(null, null)
+    }
+}
+
+
+UserSchema.statics.updateFieldToProfileOfUser = function (userid, field, callback) {
+    if (validator.params3AreValid(arguments)) {
+        userModel.findOne({_id: userid}, function (err, user) {
+            if (err)
+                throw err;
+            if (!user) {
+                callback(null, null)
+            } else {
+
+                userProfileModel.update({_id: user.userProfileId._id}, {$set: field}, callback)
+            }
+        }).populate('userProfileId')
+    } else {
+        callback(null, null)
+    }
+
+};
+
+UserSchema.statics.addNewFieldsToProfile = function (userid, fields, callback) {
+    if (validator.params3AreValid(arguments)) {
+        userModel.findOne({_id: userid}, function (err, user) {
+            if (err)
+                throw err;
+
+            if (!user) {
+                callback(null, null)
+            } else {
+
+                var profileid = user.userProfileId
+                userProfileModel.update({_id: profileid}, fields, callback)
+            }
+
         })
-        var temp=[]
-        temp[0]=arrayOfGroyps
-        temp.forEach(callback)
-    }).populate('userMemberOfGroupsId')
-};
-
-
-UserSchema.statics.findViewedShops=function(userid,callback){
-    userModel.findOne({_id:userid},function (err,user) {
-        if(err)
-            throw err;
-        var arrayOfVisitedShops=[];
-        user.userShopsVisitedId.forEach(function (e) {
-            arrayOfVisitedShops.push(e)
-        });
-        var temp=[];
-        temp[0]=arrayOfVisitedShops;
-        temp.forEach(callback)
-    }).populate('userShopsVisitedId.shopId')
-
-};
-
-
-UserSchema.statics.getProfileOfUser=function(userid,callback){
-    userModel.findOne({_id:userid},function (err,user) {
-        if(err)
-            throw err
-        console.log(user.userProfileId);
-        var prof=user.userProfileId;
-        userProfileModel.findOne({_id:prof},callback)
-
-    }).populate('userProfileId')
-}
-
-
-UserSchema.statics.updateFieldToProfileOfUser=function (userid, field,callback) {
-    userModel.findOne({_id:userid},function (err,user) {
-        if (err)
-            throw err;
-        userProfileModel.update({_id:user.userProfileId._id},{$set:field},callback)
-    }).populate('userProfileId')
-
-};
-UserSchema.statics.updateFieldsUserAccount=function(userid, field,callback) {
-    userModel.findOne({_id:userid},function (err,user) {
-        if (err)
-            throw err;
-        userAccount.update({_id:user.userAccountId._id},{$set:field},callback)
-    }).populate('userAccountId')
-
-
-
-};
-UserSchema.statics.addNewFieldsToProfile=function(userid,fields,callback){
-    userModel.findOne({_id:userid},function (err,user) {
-        if(err)
-            throw err
-        var profileid=user.userProfileId
-        userProfileModel.update({_id:profileid},fields,callback)
-
-    })
+    } else {
+        callback(null, null)
+    }
 
 
 }
 
 
-UserSchema.statics.insertToViewedProduct=function(userid,prodid,callback){
-    userModel.findOne({_id:userid},function (err,user) {
-        if(err)
-            throw err;
-        var testEchec=0;
-        user.userProductVisitedId.forEach(function (e) {
-            if(e.prodId==prodid){
-                //console.log(e.visitedOn);
-                e.visitedOn=Date.now();
+UserSchema.statics.insertToViewedProduct = function (userid, prodid, callback) {
+    if (validator.params3IdAreValid(arguments)) {
+        userModel.findOne({_id: userid}, function (err, user) {
+            if (err)
+                throw err;
+            if (!user) {
+                callback(null, null)
+            } else {
+                var testEchec = 0;
+                user.userProductVisitedId.forEach(function (e) {
+                    if (e.prodId == prodid) {
 
-                user.save(callback);
-                //console.log(e.visitedOn)
-            }
-            else{
-                //console.log(e.prodId +'else');
-                testEchec++;
-            }
+                        e.visitedOn = Date.now();
 
-        });
-        if(testEchec==user.userProductVisitedId.length){
-            //console.log('new'  +testEchec);
-            user.userProductVisitedId.push({prodId:prodid,visitedOn:Date.now()});
-            user.save(callback);
-            //console.log(user.userProductVisitedId)
-        }
-    })
+                        user.save(callback);
+
+                    }
+                    else {
+
+                        testEchec++;
+                    }
+
+                });
+                if (testEchec == user.userProductVisitedId.length) {
+
+                    user.userProductVisitedId.push({prodId: prodid, visitedOn: Date.now()});
+                    user.save(callback);
+                }
+            }
+        })
+    } else {
+        callback(null, null)
+    }
 };
 
-UserSchema.statics.insertToFollowedShops=function(userid,shopid,callback) {
-    userModel.findOne({_id: userid}, function (err, user) {
-        if (err)
-            throw err;
-        if (user.userShopsFollowedId.indexOf(shopid) === -1) {
+UserSchema.statics.insertToFollowedShops = function (userid, shopid, callback) {
+    if (validator.params3IdAreValid(arguments)) {
+        userModel.findOne({_id: userid}, function (err, user) {
+            if (err)
+                throw err;
+            if (!user) {
+                callback(null, null)
+            } else {
+                if (user.userShopsFollowedId.indexOf(shopid) === -1) {
 
-            user.userShopsFollowedId.push(shopid)
-            // user.save(callback)
+                    user.userShopsFollowedId.push(shopid)
+                    // user.save(callback)
 
-        }
-        user.save(callback)
+                }
+                user.save(callback)
 
-
-    })
+            }
+        })
+    } else {
+        callback(null, null)
+    }
 
 }
 
 
+UserSchema.statics.insertToViewedShop = function (userid, shopid, callback) {
+    if (validator.params3IdAreValid(arguments)) {
+        userModel.findOne({_id: userid}, function (err, user) {
+            if (err)
+                throw err;
+            if (!user) {
+                callback(null, null)
+            } else {
+                var testEchec = 0;
+                user.userShopsVisitedId.forEach(function (e) {
+                    if (e.shopId == shopid) {
+                        //console.log(e.visitedOn);
+                        e.visitedOn = Date.now();
+                        user.save(callback);
+                        //console.log(e.visitedOn)
+                    }
+                    else {
+                        console.log(e.shopId + 'else');
+                        testEchec++;
+                    }
 
-UserSchema.statics.insertToViewedShop=function(userid,shopid,callback){
-    userModel.findOne({_id:userid},function (err,user) {
-        if(err)
-            throw err;
-        var testEchec=0;
-        user.userShopsVisitedId.forEach(function (e) {
-            if(e.shopId==shopid){
-                //console.log(e.visitedOn);
-                e.visitedOn=Date.now();
-                user.save(callback);
-                //console.log(e.visitedOn)
+                });
+                if (testEchec == user.userShopsVisitedId.length) {
+                    //console.log('new shop');
+                    user.userShopsVisitedId.push({shopId: shopid, visitedOn: Date.now()});
+                    user.save(callback);
+                    // console.log(user.userShopsVisitedId)
+                }
             }
-            else{
-                console.log(e.shopId +'else');
-                testEchec++;
-            }
-
-        });
-        if(testEchec==user.userShopsVisitedId.length){
-            //console.log('new shop');
-            user.userShopsVisitedId.push({shopId:shopid,visitedOn:Date.now()});
-            user.save(callback);
-            // console.log(user.userShopsVisitedId)
-        }
-    })
+        })
+    }
+    else {
+        callback(null, null)
+    }
 };
 
 
+UserSchema.statics.insertGroupToGroupsOfUser = function (userid, groupid, callback) {
+    if (validator.params3IdAreValid(arguments)) {
+        userModel.findOne({_id: userid}, function (err, user) {
+            if (err)
+                throw err;
+            if (!user) {
+                callback(null, null)
+            } else {
+                if (user.userMemberOfGroupsId.indexOf(groupid) === -1) {
 
-UserSchema.statics.insertGroupToGroupsOfUser=function(userid,groupid,callback) {
-    userModel.findOne({_id: userid}, function (err, user) {
-        if (err)
-            throw err;
-        if (user.userMemberOfGroupsId.indexOf(groupid) === -1) {
+                    user.userMemberOfGroupsId.push(groupid)
+                    // user.save(callback)
 
-            user.userMemberOfGroupsId.push(groupid)
-            // user.save(callback)
-
-        }
-        user.save(callback)
+                }
+                user.save(callback)
+            }
 
 
-    })
-
+        })
+    }
+    else {
+        callback(null, null)
+    }
 }
 
-UserSchema.statics.blockUser=function(userid,callback){
-    userModel.findOne({_id:userid},function (err,user) {
-        if(err)
-            throw err
-        user.isBlocked=true;
-        user.save(callback);
+UserSchema.statics.blockUser = function (userid, callback) {
+    if (validator.params2AreValid(arguments)) {
+        userModel.findOne({_id: userid}, function (err, user) {
+            if (err)
+                throw err
+            if (!user) {
+                callback(null, null)
+            } else {
+                user.isBlocked = true;
+                user.save(callback)
+            }
 
-    })
+        })
+    }
+    else {
+        callback(null, null)
+    }
 }
 
 UserSchema.statics.getUserAccount = function (userid, callback) {
@@ -274,21 +422,65 @@ UserSchema.statics.getUserAccount = function (userid, callback) {
 //update Account in account model
 
 
+/*
+ UserSchema.statics.getInformationOfUser=function (username) {
 
-//hadou ne sont pas demandées c bon nta hna kamlou drahmek
+ userAccount.findOne({accountUsername:username},function (err,accout) {
 
-UserSchema.statics.getProfileFromAccountId=function(accountId,callback){
-    userModel.findOne({userAccountId:accountId},function (err,user) {
-        var profileId=user.userProfileId;
-        userProfileModel.findOne({_id:profileId},callback)
+ userModel.findOne({userAccountId:accout._id},function (err,user) {
+ userModel.findVisitedShops(user._id);
+
+
+
+ })
+ })
+ };*/
+/**for hichem
+ UserSchema.statics.findVisitedShops=function(userid,callback){
+    userModel.findOne({_id:userid},callback).populate('userShopsVisitedId')
+
+};
+
+ */
+
+
+
+
+
+
+
+
+/* inspire callback
+ UserSchema.statics.findFollowedShops=function(userid,callback){
+ userModel.findOne({_id:userid},function (err,user) {
+ if(err)
+ throw err;
+ var arrayOfShops=[];
+ user.userShopsFollowedId.forEach(function (e) {
+ var shopid=e._id
+
+ shopModel.findOne({_id:shopid},function (err,shop) {
+ if(err)
+ throw err;
+ console.log(shop.toString())
+
+ })
+ })
+ }).populate('userShopsFollowedId')
+
+ };
+
+ */
+
+UserSchema.statics.getProfileFromAccountId = function (accountId, callback) {
+    userModel.findOne({userAccountId: accountId}, function (err, user) {
+        var profileId = user.userProfileId;
+        userProfileModel.findOne({_id: profileId}, callback)
 
 
     }).populate('userProfileId')
 
 };
-
-
-
 
 
 //query to update userProfileId
@@ -300,8 +492,8 @@ UserSchema.statics.createUserProfile = function (userId, profileId) {
 };
 
 UserSchema.statics.createUserAccount = function (accountId) {
-    var user1=new userModel({
-        userAccountId:accountId
+    var user1 = new userModel({
+        userAccountId: accountId
     })
     user1.save();
 };
@@ -321,7 +513,6 @@ UserSchema.statics.findUserProfile = function (userid, callback) {
     this.findOne({_id: userid}, callback).populate('userProfileId')
 
 };
-
 
 
 var userModel = mongoose.model('user', UserSchema);

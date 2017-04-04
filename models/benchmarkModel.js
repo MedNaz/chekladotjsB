@@ -7,6 +7,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var productModel = require('./productModel')
+var validator=require('./validator');
 
 var BenchmarkSchema = new Schema({
     benchmarkName: {type: String, unique: true},

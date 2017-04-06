@@ -16,6 +16,9 @@ var UserAccountSchema = new Schema({
 
     createdOn: {type: Date, default: Date.now()}
 });
+
+
+
 UserAccountSchema.statics.getAccountIdFromUsername=function (username,callback) {
     this.findOne({accountUsername:username},callback)/* {
 
@@ -35,10 +38,5 @@ UserAccountSchema.statics.getAccountIdFromUsername=function (username,callback) 
 
 var userAccountModele = mongoose.model('account', UserAccountSchema);
 
-var useraccount1=new  userAccountModele({
-    accountUsername:"nazimov",
-    accountEmail : "nazim@mail.com",
-    accountPassword :"123456"
-});
 
 module.exports=userAccountModele;

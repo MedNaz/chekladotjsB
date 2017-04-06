@@ -4,8 +4,9 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var profile = require('./userProfileModel')
-var userModel = require('./userModel')
-var shopModel = require('./shopModel')
+var userModel = require('./userModel');
+var shopModel = require('./shopModel');
+var validator = require('./validator');
 
 
 var SellerSchema = new Schema({
@@ -43,9 +44,26 @@ SellerSchema.statics.findUserProfileOfSeller=function(sellerId,callback){
     }).populate('sellerUserId')
 };
 
+SellerSchema.statics.updateImageOfShop=function (userId,image,callback) {
+    if(validator.IdisValid(userId) && typeof image==='string' && typeof callback==='function') {
+        sellerModel.findOne({sellerUserId: userId}, function (err, seller) {
+            if (err)
+                throw err
+            shopModel.findOne({_id: seller.sellerShopId}, function (err, shop) {
+                if (err)
+                    throw err
+                shop.shopImage = image;
+                shop.save(callback)
+            })
+        })
 
+    }
+    else{
+        callback(null,null)
+    }
+}
 var sellerModel = mongoose.model('seller', SellerSchema);
-var seller1=new sellerModel({});
-//seller1.save();
+
+
 
 module.exports = sellerModel;

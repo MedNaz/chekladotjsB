@@ -35,6 +35,14 @@ var UserSchema = new Schema({
     isBlocked: {type: Boolean, default: false},
     createdOn: {type: Date, default: Date.now()}
 });
+UserSchema.statics.getUserIdFromAccountId=function (accountid,callback) {
+    userModel.findOne({userAccountId:accountid},function (err,user) {
+        if(err)
+            throw err;
+        var id=user._id;
+        callback(id);
+    })
+}
 UserSchema.statics.createShop = function (userid, fields, callback) {
     if (validator.params3AreValid(arguments)) {
         userModel.findOne({_id: userid}, function (err, user) {
@@ -44,30 +52,53 @@ UserSchema.statics.createShop = function (userid, fields, callback) {
                 callback(err, null)
             }
             else {
+                var location={
+                    type:'Point',
+                    coordinates:[fields.longitude,fields.latitude]
+                };
+                var locationName={
+                    city:fields.shopCity,
+                    address:fields.shopAddress
+                };
 
-                var shop = new shopModel(fields);
+                var shopObj ={
+                    shopName:fields.shopName,
+                    shopCategory: fields.shopCategory,
+                    shopLocation:{
+                        location:location,
+                        locationName:locationName
+                    },
 
+                    shopTel: fields.shopTel,
+                    shopImage:fields.shopImage
+                };
+
+
+
+                var shop = new shopModel(shopObj);
+                console.log('shop created')
                 shop.save()
-
+                console.log(shop.toString())
                 var shopid = shop._id;
                 var seller = new sellerModel({
                     sellerUserId: userid,
                     sellerShopId: shopid
-                })
+                });
                 seller.save()
-                shop.shopSellerId = seller._id;
+                console.log('seller created')
+                shop.shopSellerId=seller._id;
                 shop.save(callback);
-
+                console.log('shop updated')
+                console.log(shop.toString())
 
             }
 
         })
     }
-    else {
-        callback(null, null)
+    else{   console.log('no param')
+        callback(null,null)
     }
 };
-
 
 UserSchema.statics.getUsersWithProfiles = function (callback) {
     if (typeof callback === 'function') {
@@ -513,6 +544,25 @@ UserSchema.statics.findUserProfile = function (userid, callback) {
     this.findOne({_id: userid}, callback).populate('userProfileId')
 
 };
+UserSchema.statics.doesUserHaveShop=function(userid,callback) {
+    if(validator.params2AreValid(arguments)){
+        sellerModel.findOne({sellerUserId:userid},function (err,seller) {
+            if(err)
+                throw err
+
+            if (!seller){
+                callback(null,null)
+            }
+            else{
+                shopModel.findOne({_id:seller.sellerShopId},callback)
+            }
+        })
+    }
+    else{
+        callback(null,null)
+
+    }
+}
 
 
 var userModel = mongoose.model('user', UserSchema);

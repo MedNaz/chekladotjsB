@@ -136,7 +136,7 @@ router.put('/:id/profile', function(req, res){
         profileFirstName : req.body.profileFirstName,
         profileLastName: req.body.profileLastName
     };
-    console.log(field);
+
     APIUsersController.updateAFieldToProfileOfAspecificUser("58c9a9c1f5ac0a415e4faec2", field, function(err ,doc){
 
         res.send(doc);

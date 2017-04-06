@@ -22,7 +22,20 @@ var ShopSchema = new Schema({
     shopProductsId: [{type: Schema.Types.ObjectId, ref: 'product'}],
     shopFollowersId: [{type: Schema.Types.ObjectId, ref: 'user'}],
     shopVisitorsNumber: Number,
-    shopLocationId: {type: Schema.Types.ObjectId, ref: 'location'},
+    shopImage:String,
+    shopCategory:String,
+    shopLocation : {
+        location: {
+            type: Schema.Types,
+            coordinates: [Number],
+
+        },
+        locationName: {
+            country: String,
+            address:String,
+            city: String
+        }},
+    shopTel:String,
     shopLinksToSocialNetworks: [{type: Schema.Types.ObjectId, ref: 'socialnetwork'}],
     shopAnnouncementsId: [{type: Schema.Types.ObjectId, ref: 'announcement'}],
     shopState: String,

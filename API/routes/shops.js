@@ -2,9 +2,12 @@
  * Created by medjdoub on 19/03/17.
  */
 var express = require('express');
+var path = require('path');
+var formidable = require('formidable');
+var fs = require('fs');
 var router  = express.Router();
 var APIShopController = require('../controllers/shops');
-
+var userModel = require('../../models/userModel');
 
 
 //get all shops
@@ -22,12 +25,15 @@ router.get('/', function(req, res){
 
 //get a specific shop
 router.get('/:id', function(req, res){
-
-    APIShopController.getBasicInformationOfASpecificShop("58cbb838892e621cfabc2d92", function(err, shop){
+    var id = req.params.id;
+    APIShopController.getBasicInformationOfASpecificShop(id, function(err, shop){
 
         if(err) throw err;
         else{
-            res.json(shop);
+
+                res.json(shop);
+
+
         }
     });
 });//tested
@@ -98,16 +104,34 @@ router.get('/:id/announcements/:announcementId', function(req, res){
 });// not tested
 
 // add a shop to shops
-router.post('/shops', function(req, res){
-    var fields={
-        shopName:req.body.shopName
-    }
-    APIShopController.addShop("58ceffe3b59009cddb901a8a",fields, function(err, shop){
+router.post('/', function(req, res){
+    var userID = req.session._userID;
+    userModel.doesUserHaveShop(userID, function(err, result){
+        if(!result){
+            var shop ={
+                shopName:req.body.shopName,
+                latitude: req.body.latitude,
+                longitude: req.body.longitude,
+                shopAddress: req.body.shopAddress,
+                shopCategory: req.body.shopCategory,
+                shopCity: req.body.shopCity,
+                shopTel: req.body.shopTel,
+
+            }
 
 
-        res.json(shop);
 
-    });
+            APIShopController.addShop(userID,shop, function(err, shop){
+
+                res.redirect('/');
+
+            });
+        }else{
+            res.end();
+        }
+    })
+
+
 
 });//query is not done yet
 
@@ -134,7 +158,7 @@ router.post('/:id/products', function(req, res){
         productDescription: req.body.productDescription
 
     }
-    console.log(product);
+
 
     APIShopController.addAProductToProductsOfASpecificShop("58cbb838892e621cfabc2d92", product ,function(err, product){
         if(err) {
@@ -189,6 +213,52 @@ var fields={
 
     });
 });//bug
+
+//add a social link to a specific shop
+router.post('/:id/shopImage', function(req, res){
+
+
+    // create an incoming form object
+    var form = new formidable.IncomingForm();
+
+    var userID = req.session._userID;
+
+    // store all uploads in the /uploads directory
+    form.uploadDir = path.join(__dirname +'/../..', '/uploads');
+
+    // every time a file has been uploaded successfully,
+    // rename it to it's orignal name
+    var fileName = ''
+    form.on('file', function(field, file) {
+        fileName = userID + file.name;
+        imageLink = 'http://localhost:3000/uploads/'+ fileName;
+        fs.rename(file.path, path.join(form.uploadDir, fileName ));
+        APIShopController.updateImage(userID, imageLink, function(err, res){
+            if(err) throw err;
+            console.log(res);
+        });
+    });
+
+    // log any errors that occur
+    form.on('error', function(err) {
+        console.log('An error has occured: \n' + err);
+    });
+
+    // once all the files have been uploaded, send a response to the client
+    form.on('end', function() {
+
+        res.send({
+            'success': true,
+            'shopImage': 'http://localhost:3000/uploads/'+ fileName
+        });
+    });
+
+    // parse the incoming request containing the form data
+    form.parse(req);
+
+
+
+});//
 
 //update information of a specific shop
 router.put('/:id', function (req, res) {

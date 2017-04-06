@@ -6,7 +6,7 @@ var express = require('express');
 var route = express.Router();
 
 
-route.get('/',function(req,res){
+route.get('/:id',function(req,res){
 
     res.render('shop');
 

@@ -8,7 +8,7 @@ var userModel = require('../../models/userModel');
 var productModel = require('../../models/productModel');
 var announcementModel = require('../../models/announcementModel');
 var socialNetworkModel = require('../../models/socialNetworkModel');
-
+var sellerModel = require('../../models/sellerModel');
 
 
 function getAllShops(callback){
@@ -87,7 +87,9 @@ function deleteAShop(shopId, callback) {
 }
 
 // function deleteAProductOfASpecificShop()
-
+function updateImage(userID, imageLink, callback){
+    sellerModel.updateImageOfShop(userID, imageLink, callback);
+}
 function addShop(userId,fields, callback) {
     userModel.createShop(userId,fields, callback);
 }
@@ -117,7 +119,8 @@ module.exports = {
     updateAnAnnouncementOfASpecificShop: updateAnAnnouncementOfASpecificShop,
     updateSocialLinksOfASpecificShop: updateSocialLinksOfASpecificShop,
     deleteAShop: deleteAShop,
-    addShop:addShop
+    addShop:addShop,
+    updateImage: updateImage
 }
 
 

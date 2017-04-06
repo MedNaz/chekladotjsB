@@ -2,11 +2,19 @@
  * Created by kissi on 22/03/17.
  */
 function isValid (id) {
-    if (id.match(/^[0-9a-fA-F]{24}$/)) {
-        return true}
-    else{
-        return false}
+    if (id) {
+        if (id.match(/^[0-9a-fA-F]{24}$/)) {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    else {
+        return false;
+    }
 }
+
 
 function  paramIsValid(array) {
 
@@ -58,7 +66,7 @@ function params3IdAreValid (array) {
 
 }
 module.exports={
-    IdisValid:isValid,
+    IdisValid: isValid,
     paramIsValid:paramIsValid,
     params2AreValid:params2AreValid,
     params3AreValid:params3AreValid,

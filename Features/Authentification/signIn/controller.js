@@ -9,6 +9,7 @@ var session = require('express-session');
 
 //require all necessary models to sign in
 var account = require('../../../models/userAccountModele');
+var userModel = require('../../../models/userModel');
 
 
 //check if a key is defined in an object
@@ -69,14 +70,16 @@ function authenticate(password,user,res,req,errorMessages) {
                     if (err) {
                         throw err;
                     } else if (result) {
+                        userModel.getUserIdFromAccountId(data._id, function(userID){
+                            req.session._userID = userID;
+                            console.log("this is the session "+ req.session._userID);
+                            var hour = 3600000000000;
+                            req.session.cookie.maxAge = hour;
 
-                        req.session._userID = data._id;
-                        console.log("this is the session "+ req.session._userID);
-                        var hour = 3600000000000;
-                        req.session.cookie.maxAge = hour;
 
+                            res.redirect("/");
+                        })
 
-                        res.redirect("/authenticated ");
 
                     } else {
                         var notIdentifiedAccount = {
